@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        function countGroups(m, t) {
+            var resObj = processMatrix(m);
+            var resArr = [];
+            for (let x = 0; x < t.length; x++) {
+                if (resObj.hasOwnProperty(t[x])) {
+                    resArr.push(resObj[t[x]]);
+                } else {
+                    resArr.push(0);
+                }
+            }
+
+            return resArr;
+        }
+
+        function processMatrix(m) {
+
+            var resObj = {};
+            var rows = m.length;
+            var cols = m[0].length;
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (m[i][j] === 1) {
+                        let groupSize = processGroup(m, i, j);
+                        if (resObj.hasOwnProperty(groupSize)) {
+                            resObj[groupSize] += 1;
+                        } else {
+                            resObj[groupSize] = 1;
+                        }
+                    }
+                }
+            }
+            return resObj;
+        }
+
+
+        function processGroup(m, row, col) {
+            function isBadCell(cellLoc) {
+                var rows = m.length;
+                var cols = m[0].length;
+                if (cellLoc[0] >= 0 && cellLoc[0] < rows && cellLoc[1] >= 0 && cellLoc[1] < cols && m[cellLoc[0]][cellLoc[1]] === 1) {
+                    return false;
+                }
+                return true;
+            }
+
+            m[row][col] = "processed";
+            var top = [row - 1, col]; // chg these to objs mapped to "row" and "col"
+            var bottom = [row + 1, col];
+            var left = [row, col - 1];
+            var right = [row, col + 1];
+            var locArr = [top, bottom, left, right];
+
+            var runningCount = 0;
+            if (isBadCell(top) && isBadCell(bottom) && isBadCell(left) && isBadCell(right)) {
+                return 1;
+            }
+            for (let z = 0; z < 4; z++) {
+                if (!isBadCell(locArr[z])) {
+                    runningCount += processGroup(m, locArr[z][0], locArr[z][1]);
+                }
+            }
+            return 1 + runningCount;
+
+
+        }
+
+
+        console.log(countGroups([
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 1, 0, 0, 1, 1, 1],
+            [1, 0, 1, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        ], [1, 10, 20, 2, 6]))
+
+    </script>
+</body>
+
+</html>

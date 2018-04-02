@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        /*
+         * Complete the function below.
+         */
+        function arrange(sentence) {
+            sentence = sentence.toLowerCase();
+            sentence = sentence.replace('.','');
+            var sentenceParts = sentence.split(' ');
+            sentenceParts = orderByLength(sentenceParts);
+            sentence = sentenceParts.join(' ');
+            sentence = sentence.substring(0,1).toUpperCase() + sentence.substr(1) + '.';
+            return sentence;
+        }
+
+        function orderByLength(strArr){
+            var resArr = [];
+            while(strArr.length !== 0){
+                let smallestIndex;
+                for(let x=0; x<strArr.length; x++){
+                    if(smallestIndex === undefined){
+                        smallestIndex = 0;
+                    }else{
+                        smallestIndex = strArr[x].length < strArr[smallestIndex].length ? x : smallestIndex;
+                    }
+                }
+                let smallArr = strArr.splice(smallestIndex, 1);
+                resArr = resArr.concat(smallArr);
+            }
+
+            return resArr;
+        }
+
+        console.log(arrange('Hello world blah dah rah fa.'));
+
+    </script>
+</body>
+
+</html>

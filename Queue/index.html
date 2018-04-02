@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // Stack class
+        class Stack {
+
+            // Array is used to implement stack
+            constructor() {
+                this.items = [];
+            }
+            push(item) {
+                this.items.push(item);
+            }
+            pop() {
+                return this.items.pop();
+            }
+            isEmpty() {
+                return (this.items.length === 0);
+            }
+            peek() {
+                return this.items[this.items.length - 1]; // handle empty stack case?
+            }
+        }
+
+        class Queue {
+
+            // 2 Stacks used to implement Queue
+            constructor() {
+                this.inStack = new Stack();
+                this.outStack = new Stack();
+                this.lookup = {
+                    1: 'enqueue',
+                    2: 'dequeue',
+                    3: 'print',
+                };
+            }
+            decideOp(op) {
+                op = op.split(' '); // split on space (' ') for 1 operation
+                var operation = op.shift(); // get operation
+                operation = this.lookup[operation]; // lookup operation name
+                this[operation].apply(this, op); //run operation
+            }
+            enqueue(item) {
+                this.inStack.push(item);
+            }
+            dequeue() {
+                this._checkOutStack();
+                this.outStack.pop();
+            }
+            print() {
+                this._checkOutStack();
+                console.log(this.outStack.peek());
+            }
+
+            _checkOutStack() {
+                if (this.outStack.isEmpty()) {
+                    while (!this.inStack.isEmpty()) {
+                        this.outStack.push(this.inStack.pop());
+                    }
+                }
+
+            }
+        }
+
+        function processData(input) {
+            input = input.split('\n');
+            var q = new Queue();
+            for (let x = 1; x < input.length; x++) {
+                q.decideOp(input[x]);
+            }
+        }
+
+        processData("10 \n1 42\n2\n1 14\n3\n1 28\n3\n1 60\n1 78\n2\n2");
+
+    </script>
+</body>
+
+</html>
